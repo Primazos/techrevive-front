@@ -1,8 +1,14 @@
+import Body from "./components/Body/Body";
+import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Navbar/Navbar";
+
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </>
+    <div className="h-screen flex justify-between flex-col">
+      <Navbar />
+      <Body />
+      <Footer />
+    </div>
   );
 }
 
