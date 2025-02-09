@@ -1,6 +1,7 @@
 
-
 import { motion } from "framer-motion";
+import logo from "../../assets/57.png";
+
 
 const Logo = () => {
     return (
@@ -10,8 +11,16 @@ const Logo = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <div className="container mx-auto px-2 w-full flex flex-col lg:flex-row items-center justify-center">
-          
+        <div className="container mx-auto px-2 flex flex-col lg:flex-row items-center justify-center">
+          {/* Logo a la izquierda */}
+        <motion.img
+        src={logo}
+        className="w-[500px] h-auto rounded-lg shadow-2xl"
+        alt="Logo TechRevive"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
+      />
           
     
           {/* Contenedor del texto animado desde la derecha */}
