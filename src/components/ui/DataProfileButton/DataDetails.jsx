@@ -46,8 +46,7 @@ const DataDetails = ({ data }) => {
 
     if (data === "Mi perfil") {
       fetchUser();
-    }
-    else if (data === "Mis productos") {
+    } else if (data === "Mis productos") {
       getProductsByUserId();
     } else {
       setLoading(false); // Si no es un caso de carga de datos, termina el loading
@@ -62,7 +61,7 @@ const DataDetails = ({ data }) => {
   return (
     <div className="w-full flex justify-center">
       {data == "Mi perfil" ? (
-        <div className="card bg-neutral h-auto w-[60%]">
+        <div className="card bg-neutral h-auto w-[40%]">
           <div className="flex w-full justify-center">
             <div className="badge badge-neutral mt-6 text-2xl">Mis datos</div>
           </div>
