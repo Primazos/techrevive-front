@@ -28,7 +28,7 @@ const DataDetails = ({ data }) => {
   const getProductsByUserId = async () => {
     try {
       const response = await axios.get(
-        `${API}/api/products/get-products-by-user/${userId}`
+        `${API}/api/products/get-products-by-user/${user._id}`
       );
       setProducts(response.data);
     } catch (error) {
@@ -46,16 +46,18 @@ const DataDetails = ({ data }) => {
 
     if (data === "Mi perfil") {
       fetchUser();
-    } else if (data === "Mis productos") {
+    }
+    else if (data === "Mis productos") {
       getProductsByUserId();
     } else {
       setLoading(false); // Si no es un caso de carga de datos, termina el loading
     }
-  }, [data, userId]);
+  }, [data]);
 
   // 🔹 Mostrar carga o error si existen
   if (loading) return <div>Cargando datos...</div>;
   if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>No se encontraron datos del usuario.</div>;
 
   return (
     <div className="w-full flex justify-center">
@@ -66,7 +68,7 @@ const DataDetails = ({ data }) => {
           </div>
           <div className="flex flex-row justify-around py-6">
             <div className="mb-4 flex flex-col gap-4">
-              <h4 className="text-lg">Datos personales:</h4>
+              <h4 className="text-2xl">Datos personales:</h4>
               <p>
                 <strong>Nombre:</strong> {user.name}
               </p>
@@ -81,7 +83,7 @@ const DataDetails = ({ data }) => {
               </p>
             </div>
             <div className="mb-4 flex flex-col gap-4">
-              <h4 className="text-lg">Ubicación:</h4>
+              <h4 className="text-2xl">Ubicación:</h4>
               <p>
                 <strong>Ciudad:</strong>{" "}
                 {user.location?.city || "No disponible"}
@@ -107,9 +109,19 @@ const DataDetails = ({ data }) => {
           </div>
           {/* <div className="grid grid-auto-flow-row-dense grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 p-6 rounded-box w-full self-center place-items-center"> */}
           <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
-            {products.map((product, index) => {
-              return <Card item={product} key={index} />;
-            })}
+            {products.length > 0 ? (
+              products.map((product, index) => {
+                return <Card item={product} key={index} />;
+              })
+            ) : (
+              <div className="flex flex-col gap-4">
+                <h4 className="text-2xl">No tienes productos.</h4>
+                <p className="text-neutral">
+                  Puedes agregar productos a tu perfil desde el botón de
+                  "Agregar producto" en la página de inicio.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       ) : null}
