@@ -3,15 +3,18 @@ import axios from "axios";
 import useAuthStore from "../../store/authStore";
 import API from "../../../db/conn";
 import Card from "../../ui/Card/Card";
+import { IoAddOutline } from "react-icons/io5";
 
 const DataDetails = ({ data }) => {
   const { userId } = useAuthStore();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [creditCards, setCreditCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🔹 Obtener datos del usuario
   const fetchUser = async () => {
     try {
       const response = await axios.get(`${API}/api/users/get-user/${userId}`);
@@ -24,11 +27,10 @@ const DataDetails = ({ data }) => {
     }
   };
 
-  // 🔹 Obtener productos del usuario
   const getProductsByUserId = async () => {
     try {
       const response = await axios.get(
-        `${API}/api/products/get-products-by-user/${user._id}`
+        `${API}/api/products/get-products-by-user/${userId}`
       );
       setProducts(response.data);
     } catch (error) {
@@ -39,31 +41,49 @@ const DataDetails = ({ data }) => {
     }
   };
 
-  // 🔹 Lógica para determinar qué datos cargar
   useEffect(() => {
     setLoading(true);
     setError(null);
 
-    if (data === "Mi perfil") {
-      fetchUser();
-    } else if (data === "Mis productos") {
-      getProductsByUserId();
-    } else {
-      setLoading(false); // Si no es un caso de carga de datos, termina el loading
-    }
-  }, [data]);
+    const fetchData = async () => {
+      if (!user) {
+        await fetchUser();
+      }
+      if (data === "Mis productos" && user) {
+        await getProductsByUserId();
+      }
 
-  // 🔹 Mostrar carga o error si existen
-  if (loading) return <div>Cargando datos...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!user) return <div>No se encontraron datos del usuario.</div>;
+      if (data === "Mis favoritos" && user) {
+        await getProductsByUserId();
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [data, user]);
+
+  if (!user)
+    return (
+      <div className="flex justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+
+  if (loading)
+    return (
+      <div className="flex justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+
+  if (error) return <div className="flex justify-center">Error: {error}</div>;
 
   return (
     <div className="w-full flex justify-center">
       {data == "Mi perfil" ? (
         <div className="card bg-neutral h-auto w-[40%]">
           <div className="flex w-full justify-center">
-            <div className="badge badge-neutral mt-6 text-2xl">Mis datos</div>
+            <div className="mt-6 text-2xl">Mis datos</div>
           </div>
           <div className="flex flex-row justify-around py-6">
             <div className="mb-4 flex flex-col gap-4">
@@ -101,21 +121,23 @@ const DataDetails = ({ data }) => {
       ) : null}
       {data == "Mis productos" ? (
         <div className="card bg-neutral h-auto w-[80%]">
-          <div className="flex w-full justify-center">
-            <div className="badge badge-neutral mt-6 text-2xl">
-              Mis productos
-            </div>
+          <div className="flex w-full justify-center relative">
+            <div className="pt-6 text-2xl">Mis productos</div>
+            <button className="btn btn-circle absolute bg-primary right-1 top-1">
+              <IoAddOutline size={30} />
+            </button>
           </div>
-          {/* <div className="grid grid-auto-flow-row-dense grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 p-6 rounded-box w-full self-center place-items-center"> */}
           <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
             {products.length > 0 ? (
               products.map((product, index) => {
-                return <Card item={product} key={index} />;
+                return (
+                  <Card item={product} colorCard={"bg-base-100"} key={index} />
+                );
               })
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 text-center">
                 <h4 className="text-2xl">No tienes productos.</h4>
-                <p className="text-neutral">
+                <p className="text-sm">
                   Puedes agregar productos a tu perfil desde el botón de
                   "Agregar producto" en la página de inicio.
                 </p>
@@ -125,18 +147,74 @@ const DataDetails = ({ data }) => {
         </div>
       ) : null}
       {data == "Mis favoritos" ? (
-        <div className="card bg-neutral rounded-box w-[80%] self-center grid h-52 place-items-center">
-          Mis favoritos
+        <div className="card bg-neutral h-auto w-[80%]">
+          <div className="flex w-full justify-center relative">
+            <div className="pt-6 text-2xl">Mis favoritos</div>
+          </div>
+          <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
+            {favorites.length > 0 ? (
+              favorites.map((favorite, index) => {
+                return <Card item={favorite} key={index} />;
+              })
+            ) : (
+              <div className="flex flex-col gap-4 text-center">
+                <h4 className="text-2xl">No tienes favoritos</h4>
+                <p className="text-sm">
+                  Puedes agregar productos a tu lista de favoritos haciendo clic
+                  en el icono del corazón en los productos.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
       {data == "Transacciones" ? (
-        <div className="card bg-neutral rounded-box w-[80%] self-center grid h-52 place-items-center">
-          Transacciones
+        <div className="card bg-neutral h-auto w-[80%]">
+          <div className="flex w-full justify-center relative">
+            <div className="pt-6 text-2xl">Transacciones</div>
+          </div>
+          <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
+            {transactions.length > 0 ? (
+              transactions.map((transaction, index) => {
+                return <Card item={transaction} key={index} />;
+              })
+            ) : (
+              <div className="flex flex-col gap-4 text-center">
+                <h4 className="text-2xl">
+                  No has realizado ninguna transacción
+                </h4>
+                <p className="text-sm">
+                  Para mostrar tus transacciones, debes haber realizado una
+                  compra o venta de un producto.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
       {data == "Tarjetas" ? (
-        <div className="card bg-neutral rounded-box w-[80%] self-center grid h-52 place-items-center">
-          Tarjetas
+        <div className="card bg-neutral h-auto w-[80%]">
+          <div className="flex w-full justify-center relative">
+            <div className="pt-6 text-2xl">Mis tarjetas</div>
+            <button className="btn btn-circle absolute bg-primary right-1 top-1">
+              <IoAddOutline size={30} />
+            </button>
+          </div>
+          <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
+            {creditCards.length > 0 ? (
+              creditCards.map((creditCard, index) => {
+                return <Card item={creditCard} key={index} />;
+              })
+            ) : (
+              <div className="flex flex-col gap-4 text-center">
+                <h4 className="text-2xl">No tienes favoritos</h4>
+                <p className="text-sm">
+                  Puedes agregar productos a tu lista de favoritos haciendo
+                  click en el icono del corazón en los productos.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
     </div>

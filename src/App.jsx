@@ -7,6 +7,7 @@ import Navbar from "./components/layout/Navbar/Navbar";
 import Profile from "./pages/Profile";
 import Login from "./components/ui/Login/Login";
 import SignIn from "./components/ui/Login/SignIn";
+import ProductsDisplay from "./pages/ProductsDisplay";
 
 function App() {
   const loadUserFromStorage = useAuthStore(
@@ -27,7 +28,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/products" element={<h1>Todos los productos</h1>} />
+            <Route
+              path="/products-by-category/:category"
+              element={<ProductsDisplay />}
+            />
             <Route
               path="/products/:category"
               element={<h1>Productos por categoria</h1>}

@@ -1,16 +1,16 @@
 import React from "react";
 
-const Card = ({ item }) => {
+const Card = ({ item, colorCard }) => {
   return (
-    <div className="card bg-base-100 w-60 h-auto shadow-xl flex flex-col">
+    <div className={`card ${colorCard} w-60 h-auto shadow-xl flex flex-col`}>
       <figure className="h-56 w-full">
-        <img 
-          src={item.image_urls[0]} 
-          alt={item.title} 
+        <img
+          src={item.image_urls[0]}
+          alt={item.title}
           className="w-full h-full object-cover"
         />
       </figure>
-      <div className="card-body">
+      <div className="card-body text-center">
         <h2 className="card-title self-center">{item.title}</h2>
       </div>
     </div>

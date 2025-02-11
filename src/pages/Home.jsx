@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import Logo from "../components/ui/Logo/Logo";
 import CategoryCard from "../components/ui/Card/CategoryCard";
 import { CATEGORIES } from "../components/ui/CategoryList/CategoryList";
@@ -21,14 +22,19 @@ const Home = () => {
             Explora nuestras categorías
           </h1>
         </div>
-        <div className="flex flex-row flex-wrap gap-6 justify-around py-6">
+        <div className="flex flex-row flex-wrap gap-6 px-6 justify-around py-6">
           {CATEGORIES.map((category, index) => {
             return (
               <div
                 key={index}
                 className="shadow-xl transition-transform transform hover:scale-105 hover:cursor-pointer"
               >
-                <CategoryCard item={category} />
+                <Link
+                  to={`/products-by-category/${category.ddbb_name}`}
+                  className="shadow-xl transition-transform transform hover:scale-105 hover:cursor-pointer"
+                >
+                  <CategoryCard item={category} />
+                </Link>
               </div>
             );
           })}
