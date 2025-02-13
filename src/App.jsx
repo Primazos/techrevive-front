@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Login from "./components/ui/Login/Login";
 import SignIn from "./components/ui/Login/SignIn";
 import ProductsDisplay from "./pages/ProductsDisplay";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   const loadUserFromStorage = useAuthStore(
@@ -32,10 +33,7 @@ function App() {
               path="/products-by-category/:category"
               element={<ProductsDisplay />}
             />
-            <Route
-              path="/products/:category"
-              element={<h1>Productos por categoria</h1>}
-            />
+            <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
         </div>
