@@ -8,7 +8,7 @@ import Profile from "./pages/Profile";
 import Login from "./components/ui/Login/Login";
 import SignIn from "./components/ui/Login/SignIn";
 import ProductsDisplay from "./pages/ProductsDisplay";
-
+import UserDetail from "./components/UserDetails"
 function App() {
   const loadUserFromStorage = useAuthStore(
     (state) => state.loadUserFromStorage
@@ -38,6 +38,9 @@ function App() {
             />
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
+        </div>
+        <div>
+          <UserDetail />
         </div>
         <Footer />
       </div>

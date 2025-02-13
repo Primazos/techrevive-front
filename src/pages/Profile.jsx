@@ -6,6 +6,7 @@ import { DATA_BUTTONS } from "../components/ui/DataProfileButton/DataButtons";
 import { RxAvatar } from "react-icons/rx";
 import DataDetails from "../components/ui/DataProfileButton/DataDetails";
 
+
 const Profile = () => {
   const { user, updateUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
