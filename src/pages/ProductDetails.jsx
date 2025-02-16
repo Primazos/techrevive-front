@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API from "../db/conn";
-import { useParams } from "react-router-dom";
-import { div } from "framer-motion/client";
+import useAuthStore from "../components/store/authStore";
+import { useParams, useNavigate } from "react-router-dom";
 
 const ProductDetails = () => {
+  const navigate = useNavigate();
+  const { userId } = useAuthStore();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const createChatHandler = async () => {
+    try {
+      const response = await axios.post(
+        `${API}/api/chats/add-chat`,
+        {
+          product_id: product._id,
+          seller_id: product.user_id,
+          buyer_id: userId,
+        }
+      );
+      console.log("Chat creada:", response.data);
+      if (response.data) {
+        navigate(`/chat/${response.data._id}`);
+      }
+    } catch (error) {
+      console.error("Error al crear el chat:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -86,15 +107,16 @@ const ProductDetails = () => {
           <strong>Precio:</strong> ${product.price}
         </p>
 
-        <div className="flex flex-row gap-4 justify-start">
-          <button className="btn btn-primary">Comprar</button>
-          <div>
-            <button className="btn btn-secondary">Agregar al carrito</button>
-            <button className="btn btn-secondary">
-              Chatear con el usuario
-            </button>
+        {userId !== product.user_id ? (
+          <div className="flex flex-row gap-4 justify-start">
+            <button className="btn btn-primary">Comprar</button>
+            <div>
+              <button className="btn btn-secondary" onClick={createChatHandler}>
+                Chatear con el vendedor
+              </button>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

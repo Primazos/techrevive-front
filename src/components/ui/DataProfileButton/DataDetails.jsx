@@ -4,12 +4,13 @@ import useAuthStore from "../../store/authStore";
 import API from "../../../db/conn";
 import Card from "../../ui/Card/Card";
 import { IoAddOutline } from "react-icons/io5";
+import { Link } from "react-router";
+import { div } from "framer-motion/client";
 
 const DataDetails = ({ data }) => {
   const { userId } = useAuthStore();
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,10 +51,6 @@ const DataDetails = ({ data }) => {
         await fetchUser();
       }
       if (data === "Mis productos" && user) {
-        await getProductsByUserId();
-      }
-
-      if (data === "Mis favoritos" && user) {
         await getProductsByUserId();
       }
       setLoading(false);
@@ -131,37 +128,21 @@ const DataDetails = ({ data }) => {
             {products.length > 0 ? (
               products.map((product, index) => {
                 return (
-                  <Card item={product} colorCard={"bg-base-100"} key={index} />
+                  <div
+                    key={index}
+                    className="transition-transform transform hover:scale-105 hover:cursor-pointer"
+                  >
+                    <Link to={`/product/${product._id}`}>
+                      <Card item={product} colorCard={"bg-base-100"} />
+                    </Link>
+                  </div>
                 );
               })
             ) : (
               <div className="flex flex-col gap-4 text-center">
                 <h4 className="text-2xl">No tienes productos.</h4>
                 <p className="text-sm">
-                  Puedes agregar productos a tu perfil desde el botón de
-                  "Agregar producto" en la página de inicio.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : null}
-      {data == "Mis favoritos" ? (
-        <div className="card bg-neutral h-auto w-[80%]">
-          <div className="flex w-full justify-center relative">
-            <div className="pt-6 text-2xl">Mis favoritos</div>
-          </div>
-          <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
-            {favorites.length > 0 ? (
-              favorites.map((favorite, index) => {
-                return <Card item={favorite} key={index} />;
-              })
-            ) : (
-              <div className="flex flex-col gap-4 text-center">
-                <h4 className="text-2xl">No tienes favoritos</h4>
-                <p className="text-sm">
-                  Puedes agregar productos a tu lista de favoritos haciendo clic
-                  en el icono del corazón en los productos.
+                  Puedes agregar productos pulsando el botón de la derecha.
                 </p>
               </div>
             )}
@@ -207,10 +188,9 @@ const DataDetails = ({ data }) => {
               })
             ) : (
               <div className="flex flex-col gap-4 text-center">
-                <h4 className="text-2xl">No tienes favoritos</h4>
+                <h4 className="text-2xl">No tienes tarjetas</h4>
                 <p className="text-sm">
-                  Puedes agregar productos a tu lista de favoritos haciendo
-                  click en el icono del corazón en los productos.
+                  Puedes agregar tus tarjetas pulsando el botón de la derecha.
                 </p>
               </div>
             )}

@@ -9,6 +9,8 @@ import Login from "./components/ui/Login/Login";
 import SignIn from "./components/ui/Login/SignIn";
 import ProductsDisplay from "./pages/ProductsDisplay";
 import ProductDetails from "./pages/ProductDetails";
+import UserDetails from "./pages/UserDetails";
+import Chat from "./pages/Chat";
 
 function App() {
   const loadUserFromStorage = useAuthStore(
@@ -34,6 +36,8 @@ function App() {
               element={<ProductsDisplay />}
             />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/user-details/:id" element={<UserDetails />} />
+            <Route path="/chat/:idChat" element={<Chat />} />
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
         </div>

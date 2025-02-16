@@ -5,7 +5,7 @@ import useAuthStore from "../../store/authStore";
 import { AiOutlineLogout } from "react-icons/ai";
 import { IoMdLogIn } from "react-icons/io";
 import { RxAvatar } from "react-icons/rx";
-import { use } from "react";
+import MessageButton from "./MessageButton";
 
 const Navbar = () => {
   const location = useLocation();
@@ -82,11 +82,12 @@ const Navbar = () => {
       </div>
       <div className="flex-none"></div>
       {location.pathname === "/profile" ? (
-        <Link to="/">
-          <div className="btn" onClick={handleLogout}>
-            Salir <AiOutlineLogout size={30} />
-          </div>
-        </Link>
+         <>
+         <MessageButton />
+         <button className="btn" onClick={handleLogout}>
+           Salir <AiOutlineLogout size={30} />
+         </button>
+       </>
       ) : (
         <Link to="/profile">
           <div className="dropdown dropdown-end">
