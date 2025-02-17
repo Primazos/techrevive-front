@@ -1,62 +1,61 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-const AddProduct = ({ isOpen, onClose, userId }) => {
+const ProductForm = ({ isOpen, onClose, userId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [imageUrls, setImageUrls] = useState([]);
+  const [images, setImages] = useState([]);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileChange = (event) => {
+    setImages(event.target.files);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones básicas
-    if (
-      !title ||
-      !description ||
-      !category ||
-      !price ||
-      imageUrls.length === 0
-    ) {
+    if (!title || !description || !category || !price || images.length === 0) {
       setError("Todos los campos son obligatorios.");
       return;
     }
 
-    // Crear el objeto del producto
-    const product = {
-      title,
-      description,
-      category,
-      price: parseFloat(price),
-      image_urls: imageUrls,
-      user_id: userId, // Incluir el user_id del usuario registrado
-    };
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", price);
+    formData.append("user_id", userId);
+
+    for (let i = 0; i < images.length; i++) {
+      formData.append("images", images[i]);
+    }
 
     try {
-      // Enviar los datos a la base de datos
-      const response = await fetch("/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
+      const response = await axios.post(
+        "http://localhost:3001/api/products/add-product/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("Error al guardar el producto.");
-      }
-
-      // Limpiar el formulario y cerrar el modal
       setTitle("");
       setDescription("");
       setCategory("");
       setPrice("");
-      setImageUrls([]);
+      setImages([]);
       setError("");
       onClose();
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      setError("Hubo un error al crear el producto");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,9 +64,10 @@ const AddProduct = ({ isOpen, onClose, userId }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
       <div className="bg-base-200 rounded-lg p-6 w-full max-w-4xl flex">
-        {/* Contenedor izquierdo: Formulario */}
         <div className="w-1/2 pr-4">
-          <h2 className="text-2xl font-bold mb-4">Agregar Producto</h2>
+          <h2 className="text-2xl font-bold mb-4 text-primary">
+            Agregar Producto
+          </h2>
           {error && <div className="alert alert-error mb-4">{error}</div>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -113,31 +113,45 @@ const AddProduct = ({ isOpen, onClose, userId }) => {
                 required
               />
             </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Imágenes</label>
+              <input
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                className="file-input file-input-bordered w-full"
+              />
+            </div>
             <div className="flex justify-end gap-2">
               <button type="button" onClick={onClose} className="btn btn-ghost">
                 Cancelar
               </button>
-              <button type="submit" className="btn btn-primary">
-                Guardar
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isLoading}
+              >
+                {isLoading ? "Subiendo..." : "Crear Producto"}
               </button>
             </div>
           </form>
         </div>
 
-        {/* Contenedor derecho: Imágenes */}
         <div className="w-1/2 pl-4">
-          <h3 className="text-xl font-bold mb-4">Imágenes del Producto</h3>
+          <h3 className="text-xl font-bold mb-4 text-primary">
+            Imágenes del Producto
+          </h3>
           <div className="grid grid-cols-2 gap-4">
-            {imageUrls.map((url, index) => (
+            {Array.from(images).map((file, index) => (
               <div key={index} className="relative">
                 <img
-                  src={url}
+                  src={URL.createObjectURL(file)}
                   alt={`Imagen ${index + 1}`}
                   className="rounded-lg w-full h-32 object-cover"
                 />
                 <button
                   onClick={() =>
-                    setImageUrls(imageUrls.filter((_, i) => i !== index))
+                    setImages([...images].filter((_, i) => i !== index))
                   }
                   className="btn btn-xs btn-circle btn-error absolute top-1 right-1"
                 >
@@ -146,21 +160,10 @@ const AddProduct = ({ isOpen, onClose, userId }) => {
               </div>
             ))}
           </div>
-          <input
-            type="text"
-            placeholder="Agregar URL de imagen"
-            onKeyPress={(e) => {
-              if (e.key === "Enter" && e.target.value) {
-                setImageUrls([...imageUrls, e.target.value]);
-                e.target.value = "";
-              }
-            }}
-            className="input input-bordered w-full mt-4"
-          />
         </div>
       </div>
     </div>
   );
 };
 
-export default AddProduct;
+export default ProductForm;

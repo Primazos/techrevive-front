@@ -177,7 +177,7 @@ const Chat = () => {
 
   return (
     <div className="flex bg-base-300 p-6 rounded-lg w-full h-screen">
-      <div className="w-full h-[80%] self-center sm:w-1/3 p-4 rounded-lg ml-4 flex flex-col bg-neutral justify-between">
+      <div className="w-full h-full self-center sm:w-1/3 p-4 rounded-lg ml-4 flex flex-col bg-neutral justify-between">
         <img
           src={product.image_urls[0]}
           alt={product.title}

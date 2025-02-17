@@ -6,7 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
-  const { userId } = useAuthStore();
+  const { userId, isAuthenticated } = useAuthStore();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,14 +14,11 @@ const ProductDetails = () => {
 
   const createChatHandler = async () => {
     try {
-      const response = await axios.post(
-        `${API}/api/chats/add-chat`,
-        {
-          product_id: product._id,
-          seller_id: product.user_id,
-          buyer_id: userId,
-        }
-      );
+      const response = await axios.post(`${API}/api/chats/add-chat`, {
+        product_id: product._id,
+        seller_id: product.user_id,
+        buyer_id: userId,
+      });
       console.log("Chat creada:", response.data);
       if (response.data) {
         navigate(`/chat/${response.data._id}`);
@@ -38,6 +35,7 @@ const ProductDetails = () => {
           `${API}/api/products/get-product/${id}` // Usa id directamente
         );
         setProduct(response.data);
+        console.log("Producto obtenido:", response.data.sold);
       } catch (error) {
         console.error("Error al obtener el producto:", error);
       } finally {
@@ -107,16 +105,28 @@ const ProductDetails = () => {
           <strong>Precio:</strong> ${product.price}
         </p>
 
-        {userId !== product.user_id ? (
-          <div className="flex flex-row gap-4 justify-start">
-            <button className="btn btn-primary">Comprar</button>
-            <div>
-              <button className="btn btn-secondary" onClick={createChatHandler}>
-                Chatear con el vendedor
-              </button>
+        {/* Verifica si el producto está vendido */}
+        {product.sold && isAuthenticated ? (
+          <p className="text-red-500 font-semibold">
+            Este producto ya está vendido
+          </p>
+        ) : (
+          // Solo muestra botones si el usuario está autenticado
+          isAuthenticated &&
+          userId !== product.user_id && (
+            <div className="flex flex-row gap-4 justify-start">
+              <button className="btn btn-primary">Comprar</button>
+              <div>
+                <button
+                  className="btn btn-secondary"
+                  onClick={createChatHandler}
+                >
+                  Chatear con el vendedor
+                </button>
+              </div>
             </div>
-          </div>
-        ) : null}
+          )
+        )}
       </div>
     </div>
   );
