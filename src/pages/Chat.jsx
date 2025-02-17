@@ -57,7 +57,9 @@ const Chat = () => {
       await axios.delete(`${API}/api/messages/delete-all-messages/${idChat}`);
 
       // Eliminar el chat
-      const response = await axios.delete(`${API}/api/chats/delete-chat/${idChat}`);
+      const response = await axios.delete(
+        `${API}/api/chats/delete-chat/${idChat}`
+      );
 
       if (response.data) {
         navigate("/profile");
@@ -175,20 +177,30 @@ const Chat = () => {
 
   return (
     <div className="flex bg-base-300 p-6 rounded-lg w-full h-screen">
-      <div className="w-full sm:w-1/3 p-4 rounded-lg ml-4 flex flex-col bg-neutral">
+      <div className="w-full h-[80%] self-center sm:w-1/3 p-4 rounded-lg ml-4 flex flex-col bg-neutral justify-between">
         <img
           src={product.image_urls[0]}
           alt={product.title}
           className="w-full h-[50%] object-cover rounded-md"
         />
-        <h2 className="font-bold p-4 text-2xl text-center">{product.title}</h2>
-        <p className="text-lg mb-6 px-4">
-          <strong>Descripción:</strong>
-          <br /> {product.description}
-        </p>
-        <p className="text-lg mb-6 px-4">
-          <strong>Precio:</strong> ${product.price}
-        </p>
+        <h2 className="font-bold text-2xl text-center">{product.title}</h2>
+        <div className="divider w-[80%] flex self-center"></div>
+        <div className="text-lg px-4 max-h-40 overflow-y-auto gap-2 flex flex-col">
+          <h2 className="font-bold text-2xl text-center">Descripción:</h2>
+          <p>{product.description}</p>
+        </div>
+        <div className="divider w-[80%] flex self-center"></div>
+        <div className="w-full flex justify-between items-center">
+          <p className="text-lg mb-6 px-4">
+            <strong>Precio:</strong> ${product.price}
+          </p>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/product/${product._id}`)}
+          >
+            Ir al producto
+          </button>
+        </div>
       </div>
 
       <div className="w-2/3 p-4 rounded-lg ml-4 flex flex-col h-[90%] text-xl">

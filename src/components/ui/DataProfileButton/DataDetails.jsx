@@ -5,7 +5,8 @@ import API from "../../../db/conn";
 import Card from "../../ui/Card/Card";
 import { IoAddOutline } from "react-icons/io5";
 import { Link } from "react-router";
-import { div } from "framer-motion/client";
+import AddProduct from "../../layout/Modals/AddProduct";
+import AddCreditCard from "../../layout/Modals/AddCreditCard";
 
 const DataDetails = ({ data }) => {
   const { userId } = useAuthStore();
@@ -15,6 +16,10 @@ const DataDetails = ({ data }) => {
   const [creditCards, setCreditCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Estados para controlar la visibilidad de los modales
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
 
   const fetchUser = async () => {
     try {
@@ -120,7 +125,10 @@ const DataDetails = ({ data }) => {
         <div className="card bg-neutral h-auto w-[80%]">
           <div className="flex w-full justify-center relative">
             <div className="pt-6 text-2xl">Mis productos</div>
-            <button className="btn btn-circle absolute bg-primary right-1 top-1">
+            <button
+              className="btn btn-circle absolute bg-primary right-1 top-1"
+              onClick={() => setIsAddProductModalOpen(true)}
+            >
               <IoAddOutline size={30} />
             </button>
           </div>
@@ -177,7 +185,10 @@ const DataDetails = ({ data }) => {
         <div className="card bg-neutral h-auto w-[80%]">
           <div className="flex w-full justify-center relative">
             <div className="pt-6 text-2xl">Mis tarjetas</div>
-            <button className="btn btn-circle absolute bg-primary right-1 top-1">
+            <button
+              className="btn btn-circle absolute bg-primary right-1 top-1"
+              onClick={() => setIsCreditCardModalOpen(true)}
+            >
               <IoAddOutline size={30} />
             </button>
           </div>
@@ -197,6 +208,19 @@ const DataDetails = ({ data }) => {
           </div>
         </div>
       ) : null}
+
+      {/* Renderizar el modal de productos */}
+      <AddProduct
+        isOpen={isAddProductModalOpen}
+        onClose={() => setIsAddProductModalOpen(false)}
+        userId={userId}
+      />
+
+      <AddCreditCard
+        isOpen={isCreditCardModalOpen}
+        onClose={() => setIsCreditCardModalOpen(false)}
+        userId={userId}
+      />
     </div>
   );
 };
