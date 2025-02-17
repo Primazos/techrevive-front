@@ -11,6 +11,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [chatExists, setChatExists] = useState(false);
 
   const createChatHandler = async () => {
     try {
@@ -28,7 +29,7 @@ const ProductDetails = () => {
     }
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
@@ -47,7 +48,44 @@ const ProductDetails = () => {
     if (id) {
       fetchProduct();
     }
-  }, [id]);
+  }, [id]); */
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(
+          `${API}/api/products/get-product/${id}` // Usa id directamente
+        );
+        setProduct(response.data);
+        console.log("Producto obtenido:", response.data.sold);
+
+        // Verificar si ya existe un chat con el vendedor
+        const chatResponse = await axios.get(
+          `${API}/api/chats/get-chats-by-product/${id}`
+        );
+
+        // Verificar si alguno de los chats existentes tiene el mismo seller_id y buyer_id
+        const chatExists = chatResponse.data.some(
+          (chat) =>
+            (chat.seller_id === response.data.user_id &&
+              chat.buyer_id === userId) ||
+            (chat.seller_id === userId &&
+              chat.buyer_id === response.data.user_id)
+        );
+
+        setChatExists(chatExists); // Actualizar estado con la existencia del chat
+      } catch (error) {
+        console.error("Error al obtener el producto:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    console.log("ID del producto recibido:", id);
+    if (id) {
+      fetchProduct();
+    }
+  }, [id, userId]);
 
   const handlePrev = () => {
     setCurrentIndex(
@@ -120,8 +158,11 @@ const ProductDetails = () => {
                 <button
                   className="btn btn-secondary"
                   onClick={createChatHandler}
+                  disabled={chatExists} // Deshabilita el botón si el chat ya existe
                 >
-                  Chatear con el vendedor
+                  {chatExists
+                    ? "Ya tienes un chat con el vendedor"
+                    : "Chatear con el vendedor"}
                 </button>
               </div>
             </div>
