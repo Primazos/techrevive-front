@@ -4,6 +4,8 @@ import useAuthStore from "../../store/authStore";
 import API from "../../../db/conn";
 import Card from "../../ui/Card/Card";
 import { IoAddOutline } from "react-icons/io5";
+import AddProductModal from "../../AddProductModal"
+import CreditCardModal from "../../CreditCardModal"; // Importa el modal de tarjetas
 
 const DataDetails = ({ data }) => {
   const { userId } = useAuthStore();
@@ -14,6 +16,10 @@ const DataDetails = ({ data }) => {
   const [creditCards, setCreditCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Estados para controlar la visibilidad de los modales
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
 
   const fetchUser = async () => {
     try {
@@ -123,7 +129,11 @@ const DataDetails = ({ data }) => {
         <div className="card bg-neutral h-auto w-[80%]">
           <div className="flex w-full justify-center relative">
             <div className="pt-6 text-2xl">Mis productos</div>
-            <button className="btn btn-circle absolute bg-primary right-1 top-1">
+            {/* Botón para abrir el modal de productos */}
+            <button
+              className="btn btn-circle absolute bg-primary right-1 top-1"
+              onClick={() => setIsAddProductModalOpen(true)}
+            >
               <IoAddOutline size={30} />
             </button>
           </div>
@@ -196,7 +206,11 @@ const DataDetails = ({ data }) => {
         <div className="card bg-neutral h-auto w-[80%]">
           <div className="flex w-full justify-center relative">
             <div className="pt-6 text-2xl">Mis tarjetas</div>
-            <button className="btn btn-circle absolute bg-primary right-1 top-1">
+            {/* Botón para abrir el modal de tarjetas */}
+            <button
+              className="btn btn-circle absolute bg-primary right-1 top-1"
+              onClick={() => setIsCreditCardModalOpen(true)}
+            >
               <IoAddOutline size={30} />
             </button>
           </div>
@@ -207,16 +221,28 @@ const DataDetails = ({ data }) => {
               })
             ) : (
               <div className="flex flex-col gap-4 text-center">
-                <h4 className="text-2xl">No tienes favoritos</h4>
+                <h4 className="text-2xl">No tienes tarjetas</h4>
                 <p className="text-sm">
-                  Puedes agregar productos a tu lista de favoritos haciendo
-                  click en el icono del corazón en los productos.
+                  Puedes agregar tarjetas haciendo clic en el botón de arriba.
                 </p>
               </div>
             )}
           </div>
         </div>
       ) : null}
+
+      {/* Renderizar el modal de productos */}
+      <AddProductModal
+        isOpen={isAddProductModalOpen}
+        onClose={() => setIsAddProductModalOpen(false)}
+        userId={userId}
+      />
+
+      {/* Renderizar el modal de tarjetas */}
+      <CreditCardModal
+        isOpen={isCreditCardModalOpen}
+        onClose={() => setIsCreditCardModalOpen(false)}
+      />
     </div>
   );
 };

@@ -7,7 +7,7 @@ const CreditCardModal = ({ isOpen, onClose }) => {
     cardNumber: "",
     expiration: "",
     cvv: "",
-    brand: ""
+    brand: "",
   });
 
   const handleChange = (e) => {
@@ -61,9 +61,9 @@ const CreditCardModal = ({ isOpen, onClose }) => {
             Guardar Tarjeta
           </button>
         </div>
-        
+
         {/* Vista previa de la tarjeta */}
-        <div className="w-1/2 p-4 flex flex-col items-center">
+        <div className="w-1/2 p-4 flex flex-col items-center justify-between">
           <h2 className="text-xl font-semibold mb-4 text-primary">Vista Previa</h2>
           <div className="w-64 h-40 bg-gradient-to-r from-primary to-secondary text-primary-content rounded-lg p-4 flex flex-col justify-between shadow-lg">
             <p className="text-lg">{cardData.cardNumber || "**** **** **** ****"}</p>
@@ -72,6 +72,14 @@ const CreditCardModal = ({ isOpen, onClose }) => {
               <span>{cardData.brand || "Marca"}</span>
             </div>
           </div>
+          {/* Botón "Salir" centrado y abajo */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="btn btn-ghost mt-4"
+          >
+            Salir
+          </button>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ import Profile from "./pages/Profile";
 import Login from "./components/ui/Login/Login";
 import SignIn from "./components/ui/Login/SignIn";
 import ProductsDisplay from "./pages/ProductsDisplay";
-import CreditCardModal from "./components/CreditCardModal"; // ⚠️ Asegúrate de que el nombre del archivo coincida
+
 
 function App() {
   const loadUserFromStorage = useAuthStore(
@@ -19,7 +19,8 @@ function App() {
     loadUserFromStorage();
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // ✅ Definiendo el estado aquí
+ 
+  const userId = "256f0f4a-aa2b-4740-94ae-9dfa9feea648"; // Ejemplo de user_id
 
   return (
     <Router>
@@ -42,15 +43,7 @@ function App() {
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
         </div>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-base-300 text-base-content">
-          <button
-            className="btn btn-primary"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Abrir Modal
-          </button>
-          <CreditCardModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-        </div>
+
         <Footer />
       </div>
     </Router>
