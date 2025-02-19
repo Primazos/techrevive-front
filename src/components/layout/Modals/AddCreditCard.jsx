@@ -10,8 +10,48 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
     brand: "",
   });
 
+  const detectCardBrand = (number) => {
+    const patterns = {
+      Visa: /^4/,
+      MasterCard: /^5[1-5]/,
+      Amex: /^3[47]/,
+      Discover: /^6/,
+    };
+
+    for (let brand in patterns) {
+      if (patterns[brand].test(number)) {
+        return brand;
+      }
+    }
+    return "";
+  };
+
+  const formatExpiration = (value) => {
+    return value
+      .replace(/\D/g, "") // Elimina caracteres no numéricos
+      .replace(/(\d{2})(\d{0,2})/, "$1/$2") // Formato MM/AA
+      .substring(0, 5); // Máximo 5 caracteres
+  };
+
   const handleChange = (e) => {
-    setCardData({ ...cardData, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+
+    if (name === "cardNumber") {
+      value = value.replace(/\D/g, "").substring(0, 16);
+      const brand = detectCardBrand(value);
+      setCardData((prev) => ({ ...prev, brand, cardNumber: value }));
+      return;
+    }
+
+    if (name === "expiration") {
+      value = formatExpiration(value);
+    }
+
+    if (name === "cvv") {
+      value = value.replace(/\D/g, "").substring(0, cardData.brand === "Amex" ? 4 : 3);
+    }
+
+    setCardData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -50,10 +90,10 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
             <input
               type="text"
               name="brand"
-              placeholder="Marca (Visa, MasterCard)"
+              placeholder="Marca (Detectada Automáticamente)"
               className="w-full p-2 border rounded bg-base-100 text-base-content"
               value={cardData.brand}
-              onChange={handleChange}
+              readOnly
             />
           </form>
           <button
@@ -70,15 +110,15 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
             Vista Previa
           </h2>
           <div className="w-64 h-40 bg-gradient-to-r from-primary to-secondary text-primary-content rounded-lg p-4 flex flex-col justify-between shadow-lg">
-            <p className="text-lg">
-              {cardData.cardNumber || "**** **** **** ****"}
+            <p className="text-lg tracking-widest">
+              {cardData.cardNumber.replace(/(\d{4})/g, "$1 ").trim() || "**** **** **** ****"}
             </p>
             <div className="flex justify-between text-sm">
               <span>{cardData.expiration || "MM/AA"}</span>
               <span>{cardData.brand || "Marca"}</span>
             </div>
           </div>
-          {/* Botón "Salir" centrado y abajo */}
+          {/* Botón "Salir" */}
           <button
             type="button"
             onClick={onClose}
