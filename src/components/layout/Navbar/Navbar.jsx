@@ -6,6 +6,8 @@ import { AiOutlineLogout } from "react-icons/ai";
 import { IoMdLogIn } from "react-icons/io";
 import { RxAvatar } from "react-icons/rx";
 import MessageButton from "./MessageButton";
+import ThemeSwitcher from "./ThemeSwitcher";
+
 
 const Navbar = () => {
   const location = useLocation();
@@ -83,6 +85,7 @@ const Navbar = () => {
       <div className="flex-none"></div>
       {location.pathname === "/profile" ? (
          <>
+         <ThemeSwitcher />
          <MessageButton />
          <button className="btn" onClick={handleLogout}>
            Salir <AiOutlineLogout size={30} />

@@ -41,11 +41,7 @@ const TransactionModal = ({ product, onClose }) => {
           <div className="flex-1 border-secondary/20 md:border-r md:pr-4">
             <h3 className="text-lg font-semibold text-secondary">Detalles del Producto</h3>
             <div className="mt-4 space-y-4">
-              <img 
-                src={product.image_urls[0]} 
-                alt={product.title} 
-                className="w-full rounded-lg shadow-lg"
-              />
+              
               <div className="space-y-2">
                 <p className="text-lg font-medium">{product.title}</p>
                 <p className="text-xl font-bold text-primary">${product.price}</p>
@@ -106,3 +102,4 @@ const TransactionModal = ({ product, onClose }) => {
 };
 
 export default TransactionModal;
+

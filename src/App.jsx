@@ -11,6 +11,7 @@ import ProductsDisplay from "./pages/ProductsDisplay";
 import ProductDetails from "./pages/ProductDetails";
 import UserDetails from "./pages/UserDetails";
 import Chat from "./pages/Chat";
+import ThemeSwitcher from "./components/layout/Navbar/ThemeSwitcher";
 
 function App() {
   const loadUserFromStorage = useAuthStore(
@@ -25,6 +26,9 @@ function App() {
     <Router>
       <div className="flex flex-col h-screen">
         <Navbar />
+        <div className="p-4">
+          <ThemeSwitcher />
+        </div>
         <div className="flex-grow pt-16">
           <Routes>
             <Route path="/" element={<Home />} />
