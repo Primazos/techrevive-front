@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const ThemeSwitcher = () => {
-  const themes = ["light", "dark", "synthwave", "dracula", "forest"];
+  const themes = ["dark", "synthwave", "dracula", "forest"];
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
