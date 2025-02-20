@@ -20,12 +20,19 @@ const useAuthStore = create((set) => ({
 
         // 🔹 Cargar el usuario después del login
         await useAuthStore.getState().fetchUser(response.data.userId);
+      } else {
+        throw new Error("Credenciales incorrectas");
       }
     } catch (error) {
       console.error(
         "Error en el login:",
         error.response?.data || error.message
       );
+      console.error(
+        "Error en el login:",
+        error.response?.data || error.message
+      );
+      throw error;
     }
   },
 

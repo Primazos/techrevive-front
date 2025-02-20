@@ -165,6 +165,12 @@ const ProductDetails = () => {
                     : "Chatear con el vendedor"}
                 </button>
               </div>
+              <button
+                className="btn btn-secondary"
+                onClick={() => navigate(`/user-details/${product.user_id}`)}
+              >
+                Ver mas productos del vendedor
+              </button>
             </div>
           )
         )}

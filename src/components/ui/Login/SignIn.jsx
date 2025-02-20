@@ -18,7 +18,7 @@ const SignIn = () => {
     },
   });
 
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState({ text: "", type: "" });
   const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -42,22 +42,41 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Enviar los datos al backend para crear el usuario
-      const response = await axios.post(`${API}/api/users/add-user/`, formData);
-      setSuccess(true); // Si la respuesta es exitosa
-      console.log(response.data); // Aquí puedes hacer algo con la respuesta, si es necesario
+      await axios.post(`${API}/api/users/add-user/`, formData);
+      setMessage({
+        text: "Usuario registrado con éxito. Redirigiendo...",
+        type: "success",
+      });
+
+      // Limpiar el mensaje de éxito después de 2 segundos
+      setTimeout(() => {
+        setMessage({ text: "", type: "" });
+        setSuccess(true); // Redirigir después de 2s
+      }, 2000);
     } catch (error) {
-      setError("Hubo un error al crear el usuario."); // En caso de error
-      console.error("Error al crear usuario:", error);
+      setMessage({
+        text: "Hubo un error al crear el usuario. Verifica los datos ingresados.",
+        type: "error",
+      });
+
+      // Limpiar el mensaje de error después de 3 segundos
+      setTimeout(() => {
+        setMessage({ text: "", type: "" });
+      }, 3000); // 3 segundos para el mensaje de error
     }
   };
 
   if (success) return <Navigate to="/login" />;
-  if (error) return <div>Error: {error}</div>;
-
 
   return (
-    <div className="hero bg-base-200 h-full">
+    <div className="hero bg-base-200 h-full relative">
+      {message.text && (
+        <div
+          className={`alert alert-${message.type} w-auto absolute left-1/2 top-6 z-50 transform -translate-x-1/2 p-3 rounded-lg`}
+        >
+          <span>{message.text}</span>
+        </div>
+      )}
       <div className="hero-content flex-col w-full">
         <div className="text-center lg:text-left">
           <h1 className="text-5xl text-center font-bold">
@@ -84,7 +103,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Usuario</span>
@@ -99,7 +117,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Correo electrónico</span>
@@ -114,7 +131,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Contraseña</span>
@@ -129,7 +145,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Género</span>
@@ -148,7 +163,6 @@ const SignIn = () => {
                   <option value="mujer">Femenino</option>
                 </select>
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Teléfono (opcional)</span>
@@ -162,8 +176,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
-              {/* Campos de ubicación */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Ciudad</span>
@@ -177,7 +189,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Región</span>
@@ -191,7 +202,6 @@ const SignIn = () => {
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">País</span>
@@ -206,7 +216,6 @@ const SignIn = () => {
                 />
               </div>
             </div>
-
             <div className="form-control mt-6">
               <button type="submit" className="btn btn-primary">
                 Iniciar sesión
