@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import API from "../../../db/conn";
 
-const CreditCard = ({ creditCard, onDelete }) => {
+const CreditCard = ({ creditCard, onDelete, onSelectDefault }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDefault, setIsDefault] = useState(creditCard.is_default); // Establecemos el estado inicial
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -11,6 +12,18 @@ const CreditCard = ({ creditCard, onDelete }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleSelectDefault = async () => {
+    try {
+      await axios.put(
+        `${API}/api/credit-cards/select-default-credit-card/${creditCard._id}`
+      );
+      onSelectDefault(creditCard._id); // Actualizar el estado en DataDetails
+      setIsDefault(true); // Cambiar el estado local
+    } catch (error) {
+      console.error("Error al seleccionar tarjeta predeterminada", error);
+    }
   };
 
   const handleDelete = async () => {
@@ -29,13 +42,19 @@ const CreditCard = ({ creditCard, onDelete }) => {
 
   return (
     <div>
-      <div className="w-64 h-40 bg-gradient-to-r from-primary to-secondary text-primary-content rounded-lg p-4 flex flex-col justify-between shadow-lg relative">
-        <button
-          className="absolute -top-2 -right-2 bg-red-500 text-white w-7 h-7 flex items-center justify-center rounded-full text-xs shadow-md"
-          onClick={handleOpenModal}
-        >
-          ✕
-        </button>
+      <div
+        className={`w-64 h-40 bg-gradient-to-r from-primary to-secondary text-primary-content rounded-lg p-4 flex flex-col justify-between shadow-lg relative ${
+          isDefault ? "border-4 border-accent" : ""
+        }`}
+      >
+        {!isDefault && (
+          <button
+            className="absolute -top-2 -right-2 bg-red-500 text-white w-7 h-7 flex items-center justify-center rounded-full text-xs shadow-md"
+            onClick={handleOpenModal}
+          >
+            ✕
+          </button>
+        )}
         <p className="text-lg">
           {creditCard.card_number || "**** **** **** ****"}
         </p>
@@ -43,6 +62,17 @@ const CreditCard = ({ creditCard, onDelete }) => {
           <span>{creditCard.expiration_date || "MM/AA"}</span>
           <span>{creditCard.brand || "Marca"}</span>
         </div>
+
+        {!isDefault ? (
+          <button
+            onClick={handleSelectDefault}
+            className="btn btn-accent ml-2"
+          >
+            Marcar por defecto
+          </button>
+        ) : (
+          <span className="ml-2 text-neutral">Predeterminada</span>
+        )}
       </div>
 
       {isModalOpen && (
@@ -59,10 +89,7 @@ const CreditCard = ({ creditCard, onDelete }) => {
                 >
                   Cancelar
                 </button>
-                <button
-                  className="btn btn-error"
-                  onClick={handleDelete}
-                >
+                <button className="btn btn-error" onClick={handleDelete}>
                   Eliminar Tarjeta
                 </button>
               </div>

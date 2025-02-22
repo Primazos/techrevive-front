@@ -63,8 +63,26 @@ const DataDetails = ({ data }) => {
     }
   };
 
-  const handleDeleteCreditCard = (id) => {
-    setCreditCards(creditCards.filter((card) => card._id !== id));
+  const handleSelectDefault = async () => {
+    try {
+      setCreditCards([])
+      await getCreditCardsByUserId();
+  
+      setMessage({ text: "Tarjeta predeterminada actualizada", type: "success" });
+      setTimeout(() => {
+        setMessage({ text: "", type: "" });
+      }, 2000);
+    } catch (error) {
+      console.error("Error al seleccionar la tarjeta predeterminada", error);
+      setMessage({ text: "Error al actualizar la tarjeta", type: "error" });
+    }
+  };
+  
+
+  const handleDeleteCreditCard = async (id) => {
+    /* setCreditCards(creditCards.filter((card) => card._id !== id)); */
+    setCreditCards([])
+    await getCreditCardsByUserId();
 
     setMessage({ text: "Tarjeta eliminada correctamente", type: "success" });
     setTimeout(() => {
@@ -227,6 +245,7 @@ const DataDetails = ({ data }) => {
                   <CreditCard
                     creditCard={creditCard}
                     onDelete={handleDeleteCreditCard}
+                    onSelectDefault={handleSelectDefault} // Llamamos a la función para actualizar el estado
                     key={index}
                   />
                 );
