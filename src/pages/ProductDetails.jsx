@@ -3,6 +3,7 @@ import axios from "axios";
 import API from "../db/conn";
 import useAuthStore from "../components/store/authStore";
 import { useParams, useNavigate } from "react-router-dom";
+import PurchaseConfirmationModal from "../components/layout/Modals/PurchaseConfirmationModal";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [chatExists, setChatExists] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const createChatHandler = async () => {
     try {
@@ -153,7 +155,7 @@ const ProductDetails = () => {
           isAuthenticated &&
           userId !== product.user_id && (
             <div className="flex flex-row gap-4 justify-start">
-              <button className="btn btn-primary">Comprar</button>
+              <button className="btn btn-primary" onClick={()=>setModalOpen(true)}>Comprar</button>
               <div>
                 <button
                   className="btn btn-secondary"
@@ -175,6 +177,12 @@ const ProductDetails = () => {
           )
         )}
       </div>
+      {modalOpen && (
+        <PurchaseConfirmationModal
+          product={product}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

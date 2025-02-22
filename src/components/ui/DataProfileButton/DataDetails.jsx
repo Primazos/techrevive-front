@@ -7,6 +7,7 @@ import { IoAddOutline } from "react-icons/io5";
 import { Link } from "react-router";
 import AddProduct from "../../layout/Modals/AddProduct";
 import AddCreditCard from "../../layout/Modals/AddCreditCard";
+import CreditCard from "../Card/CreditCard";
 
 const DataDetails = ({ data }) => {
   const { userId } = useAuthStore();
@@ -14,6 +15,7 @@ const DataDetails = ({ data }) => {
   const [products, setProducts] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
+  const [message, setMessage] = useState({ text: "", type: "" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -47,6 +49,29 @@ const DataDetails = ({ data }) => {
     }
   };
 
+  const getCreditCardsByUserId = async () => {
+    try {
+      const response = await axios.get(
+        `${API}/api/credit-cards/get-credit-cards/${userId}`
+      );
+      setCreditCards(response.data);
+    } catch (error) {
+      console.error("Error al obtener tarjetas:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteCreditCard = (id) => {
+    setCreditCards(creditCards.filter((card) => card._id !== id));
+
+    setMessage({ text: "Tarjeta eliminada correctamente", type: "success" });
+    setTimeout(() => {
+      setMessage({ text: "", type: "" });
+    }, 2000);
+  };
+
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -57,6 +82,9 @@ const DataDetails = ({ data }) => {
       }
       if (data === "Mis productos" && user) {
         await getProductsByUserId();
+      }
+      if (data === "Tarjetas" && user) {
+        await getCreditCardsByUserId();
       }
       setLoading(false);
     };
@@ -195,7 +223,13 @@ const DataDetails = ({ data }) => {
           <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
             {creditCards.length > 0 ? (
               creditCards.map((creditCard, index) => {
-                return <Card item={creditCard} key={index} />;
+                return (
+                  <CreditCard
+                    creditCard={creditCard}
+                    onDelete={handleDeleteCreditCard}
+                    key={index}
+                  />
+                );
               })
             ) : (
               <div className="flex flex-col gap-4 text-center">
@@ -221,6 +255,16 @@ const DataDetails = ({ data }) => {
         onClose={() => setIsCreditCardModalOpen(false)}
         userId={userId}
       />
+
+      {message.text && (
+        <div
+          className={`alert ${
+            message.type === "error" ? "alert-error" : "alert-success"
+          } w-auto absolute left-1/2 top-20 z-50 transform -translate-x-1/2 p-3 rounded-lg`}
+        >
+          <span>{message.text}</span>
+        </div>
+      )}
     </div>
   );
 };

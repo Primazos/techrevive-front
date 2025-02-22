@@ -69,7 +69,7 @@ const Login = () => {
         <div
           className={`alert ${
             message.type === "error" ? "alert-error" : "alert-success"
-          } w-auto absolute left-1/2 top-6 z-50 transform -translate-x-1/2 p-3 rounded-lg`}
+          } w-auto absolute left-1/2 top-20 z-50 transform -translate-x-1/2 p-3 rounded-lg`}
         >
           <span>{message.text}</span>
         </div>

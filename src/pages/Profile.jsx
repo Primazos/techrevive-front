@@ -72,7 +72,7 @@ const Profile = () => {
     <div className="py-16 w-full h-full">
       {message.text && (
         <div
-          className={`alert alert-${message.type} w-auto absolute left-1/2 top-6 z-50 transform -translate-x-1/2`}
+          className={`alert alert-${message.type} w-auto absolute left-1/2 top-20 z-50 transform -translate-x-1/2`}
         >
           <span>{message.text}</span>
         </div>
