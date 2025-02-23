@@ -148,7 +148,7 @@ const Chat = () => {
           <div className="divider w-[80%] self-center"></div>
           <div className="w-full flex justify-between items-center">
             <p className="text-lg mb-6 px-4">
-              <strong>Precio:</strong> ${product.price}
+              <strong>Precio:</strong> {product.price} €
             </p>
             <button
               className="btn btn-primary"

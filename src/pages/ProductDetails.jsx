@@ -142,7 +142,7 @@ const ProductDetails = () => {
           <br /> {product.description}
         </p>
         <p className="text-lg mb-6">
-          <strong>Precio:</strong> ${product.price}
+          <strong>Precio:</strong> {product.price} €
         </p>
 
         {/* Verifica si el producto está vendido */}

@@ -57,7 +57,7 @@ const TransactionDetailsModal = ({ transaction, onClose }) => {
               <span className="font-semibold">Categoría:</span> {transaction.category}
             </p>
             <p className="mb-2">
-              <span className="font-semibold">Precio:</span> ${transaction.sale_price}
+              <span className="font-semibold">Precio:</span> {transaction.sale_price} €
             </p>
             {sellerUser && (
               <p className="mb-2">

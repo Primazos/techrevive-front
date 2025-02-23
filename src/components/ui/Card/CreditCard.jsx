@@ -56,7 +56,12 @@ const CreditCard = ({ creditCard, onDelete, onSelectDefault }) => {
           </button>
         )}
         <p className="text-lg">
-          {creditCard.card_number || "**** **** **** ****"}
+          {creditCard.card_number
+            ? creditCard.card_number
+                .replace(/\s+/g, "")
+                .replace(/(.{4})/g, "$1 ")
+                .trim()
+            : "**** **** **** ****"}
         </p>
         <div className="flex justify-between text-sm">
           <span>{creditCard.expiration_date || "MM/AA"}</span>
@@ -64,10 +69,7 @@ const CreditCard = ({ creditCard, onDelete, onSelectDefault }) => {
         </div>
 
         {!isDefault ? (
-          <button
-            onClick={handleSelectDefault}
-            className="btn btn-accent ml-2"
-          >
+          <button onClick={handleSelectDefault} className="btn btn-accent ml-2">
             Marcar por defecto
           </button>
         ) : (
