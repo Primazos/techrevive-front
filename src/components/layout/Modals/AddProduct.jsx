@@ -95,13 +95,20 @@ const ProductForm = ({ isOpen, onClose, userId }) => {
               <label className="block text-sm font-medium mb-2">
                 Categoría
               </label>
-              <input
-                type="text"
+              <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="input input-bordered w-full"
+                className="select select-bordered w-full"
                 required
-              />
+              >
+                <option value="">Seleccione una categoría</option>
+                <option value="placa base">Placas Base</option>
+                <option value="cpu">CPU</option>
+                <option value="disco duro">Discos Duros</option>
+                <option value="tarjeta grafica">Tarjetas Gráficas</option>
+                <option value="memoria ram">Memorias RAM</option>
+                <option value="fuente de alimentacion">Alimentación</option>
+              </select>
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Precio</label>
