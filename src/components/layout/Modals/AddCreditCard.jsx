@@ -14,13 +14,40 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
     brand: "",
   });
 
+  // Función para formatear el número de tarjeta: agrupar en bloques de 4 dígitos
+  const formatCardNumber = (value) => {
+    const digits = value.replace(/\D/g, ""); // elimina todo lo que no sea dígito
+    const groups = digits.match(/.{1,4}/g);
+    return groups ? groups.join(" ") : "";
+  };
+
+  // Detectar la marca automáticamente según el primer dígito:
+  // Si el primer dígito es del 0 al 4 se asigna "Visa" y si es del 5 al 9 "MasterCard"
+  const detectCardBrand = (number) => {
+    const plainNumber = number.replace(/\s/g, ""); // eliminar espacios
+    if (!plainNumber) return "";
+    const firstDigit = parseInt(plainNumber[0], 10);
+    return firstDigit >= 0 && firstDigit <= 4 ? "Visa" : "MasterCard";
+  };
+
   const handleChange = (e) => {
-    setCardData({ ...cardData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "cardNumber") {
+      // Eliminamos los caracteres que no sean dígitos
+      const digits = value.replace(/\D/g, "");
+      // Si ya se ingresaron 16 dígitos, no se actualiza el estado
+      if (digits.length > 16) return;
+      const formattedNumber = formatCardNumber(value);
+      const brand = detectCardBrand(formattedNumber);
+      setCardData({ ...cardData, cardNumber: formattedNumber, brand });
+    } else {
+      setCardData({ ...cardData, [name]: value });
+    }
   };
 
   const handleSaveCard = async () => {
     const cardPayload = {
-      card_number: cardData.cardNumber,
+      card_number: cardData.cardNumber.replace(/\s/g, ""), // enviar sin espacios
       expiration_date: cardData.expiration,
       cvv: cardData.cvv,
       brand: cardData.brand,
@@ -64,18 +91,18 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      {message.text && (
+        <div
+          className={`alert ${
+            message.type === "error" ? "alert-error" : "alert-success"
+          } absolute top-20 w-auto left-1/2 z-50 transform -translate-x-1/2 p-3 rounded-lg`}
+        >
+          <span>{message.text}</span>
+        </div>
+      )}
       <div className="bg-base-200 rounded-lg shadow-lg w-3/4 max-w-3xl p-6 flex">
         {/* Formulario */}
-        <div className="w-1/2 p-4 border-r border-base-300">
-        {message.text && (
-            <div
-              className={`alert ${
-                message.type === "error" ? "alert-error" : "alert-success"
-              } w-auto absolute left-1/2 top-20 z-50 transform -translate-x-1/2 p-3 rounded-lg`}
-            >
-              <span>{message.text}</span>
-            </div>
-          )}
+        <div className="w-1/2 p-4 border-r border-base-300 relative">
           <h2 className="text-xl font-semibold mb-4 text-primary">
             Añadir Tarjeta
           </h2>
@@ -87,6 +114,7 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
               className="w-full p-2 border rounded bg-base-100 text-base-content"
               value={cardData.cardNumber}
               onChange={handleChange}
+              maxLength={19} // 16 dígitos + 3 espacios
             />
             <input
               type="text"
@@ -104,13 +132,14 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
               value={cardData.cvv}
               onChange={handleChange}
             />
+            {/* El campo "brand" se actualizará automáticamente */}
             <input
               type="text"
               name="brand"
-              placeholder="Marca (Visa, MasterCard)"
+              placeholder="Marca"
               className="w-full p-2 border rounded bg-base-100 text-base-content"
               value={cardData.brand}
-              onChange={handleChange}
+              readOnly
             />
           </form>
           <button
@@ -143,7 +172,6 @@ const CreditCardModal = ({ isOpen, onClose, userId }) => {
           >
             Salir
           </button>
-          
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import { Link } from "react-router";
 import AddProduct from "../../layout/Modals/AddProduct";
 import AddCreditCard from "../../layout/Modals/AddCreditCard";
 import CreditCard from "../Card/CreditCard";
+import TransactionCard from "../Card/TransactionCard";
 
 const DataDetails = ({ data }) => {
   const { userId } = useAuthStore();
@@ -22,6 +23,8 @@ const DataDetails = ({ data }) => {
   // Estados para controlar la visibilidad de los modales
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
+  const [isShowTransactionsModalOpen, setIsShowTransactionsModalOpen] =
+    useState(false);
 
   const fetchUser = async () => {
     try {
@@ -65,10 +68,13 @@ const DataDetails = ({ data }) => {
 
   const handleSelectDefault = async () => {
     try {
-      setCreditCards([])
+      setCreditCards([]);
       await getCreditCardsByUserId();
-  
-      setMessage({ text: "Tarjeta predeterminada actualizada", type: "success" });
+
+      setMessage({
+        text: "Tarjeta predeterminada actualizada",
+        type: "success",
+      });
       setTimeout(() => {
         setMessage({ text: "", type: "" });
       }, 2000);
@@ -77,17 +83,30 @@ const DataDetails = ({ data }) => {
       setMessage({ text: "Error al actualizar la tarjeta", type: "error" });
     }
   };
-  
 
   const handleDeleteCreditCard = async (id) => {
     /* setCreditCards(creditCards.filter((card) => card._id !== id)); */
-    setCreditCards([])
+    setCreditCards([]);
     await getCreditCardsByUserId();
 
     setMessage({ text: "Tarjeta eliminada correctamente", type: "success" });
     setTimeout(() => {
       setMessage({ text: "", type: "" });
     }, 2000);
+  };
+
+  const getTransactionsByUserId = async () => {
+    try {
+      const response = await axios.get(
+        `${API}/api/transactions/get-transactions-by-user/${userId}`
+      );
+      setTransactions(response.data);
+    } catch (error) {
+      console.error("Error al obtener las transacciones:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -103,6 +122,9 @@ const DataDetails = ({ data }) => {
       }
       if (data === "Tarjetas" && user) {
         await getCreditCardsByUserId();
+      }
+      if (data === "Transacciones" && user) {
+        await getTransactionsByUserId();
       }
       setLoading(false);
     };
@@ -211,7 +233,7 @@ const DataDetails = ({ data }) => {
           <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
             {transactions.length > 0 ? (
               transactions.map((transaction, index) => {
-                return <Card item={transaction} key={index} />;
+                return <TransactionCard transaction={transaction} key={index} />;
               })
             ) : (
               <div className="flex flex-col gap-4 text-center">
@@ -272,6 +294,12 @@ const DataDetails = ({ data }) => {
       <AddCreditCard
         isOpen={isCreditCardModalOpen}
         onClose={() => setIsCreditCardModalOpen(false)}
+        userId={userId}
+      />
+
+      <showTransactions
+        isOpen={isShowTransactionsModalOpen}
+        onClose={() => setIsShowTransactionsModalOpen(false)}
         userId={userId}
       />
 
