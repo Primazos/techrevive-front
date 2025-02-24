@@ -112,7 +112,7 @@ const UserDetails = () => {
       {/* Panel Derecho - Productos con Paginación */}
       <div className="w-2/3 p-4 rounded-lg ml-4 flex flex-col h-full">
         <h2 className="font-bold p-4 text-2xl justify-center flex">
-          Sus Productos
+          Productos
         </h2>
 
         <div className="w-full flex flex-col gap-6 flex-grow">
