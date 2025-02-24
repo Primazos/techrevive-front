@@ -107,9 +107,12 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
     <>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
         <div className="modal-box bg-base-200 max-w-6xl">
+          {/* Mostrar solo si la transacción NO ha sido confirmada */}
+          {!showConfirmation && (
           <h2 className="text-2xl font-bold mb-6 text-primary">
-            Producto Adquirido
+            Producto seleccionado
           </h2>
+          )}
 
           {/* Si la transacción fue confirmada, mostrar el mensaje de éxito */}
           {showConfirmation ? (

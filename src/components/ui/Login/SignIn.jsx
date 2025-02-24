@@ -218,7 +218,7 @@ const SignIn = () => {
             </div>
             <div className="form-control mt-6">
               <button type="submit" className="btn btn-primary">
-                Iniciar sesión
+                Registrate
               </button>
             </div>
           </form>
