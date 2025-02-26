@@ -135,7 +135,7 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
                   <div className="space-y-2">
                     <p className="text-lg font-medium">{product.title}</p>
                     <p className="text-xl font-bold text-primary">
-                      ${product.price}
+                      {product.price} €
                     </p>
                   </div>
                 </div>
