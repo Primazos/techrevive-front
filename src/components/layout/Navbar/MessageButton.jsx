@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAuthStore from "../../store/authStore";
 import API from "../../../db/conn";
 import axios from "axios";
-import { Link } from "react-router-dom"; // Asegúrate de importar Link
+import { Link } from "react-router-dom";
 
 const MessageButton = () => {
   const { userId } = useAuthStore();
@@ -35,14 +35,17 @@ const MessageButton = () => {
         className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
       >
         {chats.map((chat) => {
-          // Compara el ID y obtiene el nombre del otro usuario
-          const otherUserUsername = chat.seller_id !== userId ? chat.seller_username : chat.buyer_username;
-          
+          const otherUserUsername =
+            chat.seller_id !== userId
+              ? chat.seller_username
+              : chat.buyer_username;
+
           return (
             <li key={chat._id} className="menu-item">
-              {/* Link al chat con el nombre del usuario */}
               <Link to={`/chat/${chat._id}`}>
-                {otherUserUsername ? `Chat: ${otherUserUsername}` : "Cargando..."}
+                {otherUserUsername
+                  ? `Chat: ${otherUserUsername}`
+                  : "Cargando..."}
               </Link>
             </li>
           );

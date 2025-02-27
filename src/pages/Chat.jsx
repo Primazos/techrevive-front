@@ -6,7 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const Chat = () => {
   const navigate = useNavigate();
-  const { userId, user } = useAuthStore(); // Usuario autenticado
+  const { userId, user } = useAuthStore();
   const { idChat } = useParams();
   const [chat, setChat] = useState(null);
   const [product, setProduct] = useState(null);
@@ -18,7 +18,6 @@ const Chat = () => {
   const chatEndRef = useRef(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // Desplazar automáticamente hacia abajo al agregar mensajes
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -32,7 +31,10 @@ const Chat = () => {
     };
 
     try {
-      const response = await axios.post(`${API}/api/messages/add-message`, newMessage);
+      const response = await axios.post(
+        `${API}/api/messages/add-message`,
+        newMessage
+      );
       const savedMessage = response.data;
       setMessages([...messages, savedMessage]);
       setInputValue("");
@@ -44,7 +46,9 @@ const Chat = () => {
   const deleteChatHandler = async () => {
     try {
       await axios.delete(`${API}/api/messages/delete-all-messages/${idChat}`);
-      const response = await axios.delete(`${API}/api/chats/delete-chat/${idChat}`);
+      const response = await axios.delete(
+        `${API}/api/chats/delete-chat/${idChat}`
+      );
       if (response.data) {
         navigate("/profile");
       }
@@ -76,7 +80,9 @@ const Chat = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`${API}/api/messages/get-messages/${idChat}`);
+        const response = await axios.get(
+          `${API}/api/messages/get-messages/${idChat}`
+        );
         setMessages(response.data);
       } catch (error) {
         console.error("Error al obtener los mensajes:", error);
@@ -89,9 +95,12 @@ const Chat = () => {
   useEffect(() => {
     const fetchOtherUser = async () => {
       if (!chat) return;
-      const otherUserId = userId === chat.seller_id ? chat.buyer_id : chat.seller_id;
+      const otherUserId =
+        userId === chat.seller_id ? chat.buyer_id : chat.seller_id;
       try {
-        const response = await axios.get(`${API}/api/users/get-user/${otherUserId}`);
+        const response = await axios.get(
+          `${API}/api/users/get-user/${otherUserId}`
+        );
         setOtherUser(response.data);
       } catch (error) {
         console.error("Error al obtener el otro usuario:", error);
@@ -107,7 +116,9 @@ const Chat = () => {
     const fetchProduct = async () => {
       try {
         if (chat) {
-          const response = await axios.get(`${API}/api/products/get-product/${chat.product_id}`);
+          const response = await axios.get(
+            `${API}/api/products/get-product/${chat.product_id}`
+          );
           setProduct(response.data);
         }
       } catch (error) {
@@ -132,7 +143,6 @@ const Chat = () => {
   return (
     <>
       <div className="flex bg-base-300 p-6 rounded-lg w-full h-screen gap-4">
-        {/* Sección de Producto (más estrecha) */}
         <div className="basis-1/3 h-full p-4 rounded-lg bg-neutral flex flex-col justify-between">
           <img
             src={product.image_urls[0]}
@@ -159,7 +169,6 @@ const Chat = () => {
           </div>
         </div>
 
-        {/* Sección de Chat (más ancha) */}
         <div className="basis-2/3 h-full p-4 rounded-lg flex flex-col bg-base-100 text-xl">
           <div className="w-full h-[10%] flex justify-between items-center pb-4">
             <div className="text-center w-full">
@@ -178,13 +187,23 @@ const Chat = () => {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`chat ${msg.sender_id === userId ? "chat-end" : "chat-start"}`}
+                className={`chat ${
+                  msg.sender_id === userId ? "chat-end" : "chat-start"
+                }`}
               >
                 <div className="chat-image avatar">
                   <div className="w-10 rounded-full">
                     <img
-                      alt={msg.sender_id === userId ? user.username : otherUser?.username}
-                      src={msg.sender_id === userId ? user.avatar_img : otherUser?.avatar_img}
+                      alt={
+                        msg.sender_id === userId
+                          ? user.username
+                          : otherUser?.username
+                      }
+                      src={
+                        msg.sender_id === userId
+                          ? user.avatar_img
+                          : otherUser?.avatar_img
+                      }
                     />
                   </div>
                 </div>
@@ -204,14 +223,16 @@ const Chat = () => {
                 </div>
                 <div
                   className={`chat-bubble ${
-                    msg.sender_id === userId ? "bg-primary text-black" : "bg-secondary text-black"
+                    msg.sender_id === userId
+                      ? "bg-primary text-black"
+                      : "bg-secondary text-black"
                   }`}
                 >
                   {msg.content}
                 </div>
               </div>
             ))}
-            {/* Elemento para scroll automático */}
+
             <div ref={chatEndRef}></div>
           </div>
           <div className="join mt-auto flex w-full gap-4 p-2 pt-4">
@@ -230,7 +251,6 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Modal de confirmación para eliminar el chat */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
           <div className="card bg-base-200 shadow-xl w-96">

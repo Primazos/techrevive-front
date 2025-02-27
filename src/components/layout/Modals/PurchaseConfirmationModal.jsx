@@ -27,7 +27,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
   useEffect(() => {
     const fetchCardAndAddress = async () => {
       try {
-        // Obtener detalles de la tarjeta
         const cardResponse = await axios.get(
           `${API}/api/credit-cards/get-default-credit-card/${userId}`
         );
@@ -39,16 +38,15 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
           brand: cardResponse.data.brand,
         });
 
-        // Obtener detalles de la dirección del usuario
         const userResponse = await axios.get(
           `${API}/api/users/get-user/${userId}`
         );
         setAddressData({
-          city: userResponse.data.location?.city || "Las Palmas", // Valor por defecto si no está disponible
-          region: userResponse.data.location?.region || "Canarias", // Valor por defecto si no está disponible
-          country: userResponse.data.location?.country || "España", // Valor por defecto si no está disponible
-          address: "", // Se rellenará manualmente
-          postalCode: "", // Se rellenará manualmente
+          city: userResponse.data.location?.city || "Las Palmas",
+          region: userResponse.data.location?.region || "Canarias",
+          country: userResponse.data.location?.country || "España",
+          address: "",
+          postalCode: "",
         });
       } catch (error) {
         console.error("Error al obtener los datos:", error);
@@ -75,20 +73,17 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
     };
 
     try {
-      // Crear la transacción
       const response = await axios.post(
         `${API}/api/transactions/add-transaction/`,
         transactionData
       );
       console.log("Transacción creada:", response.data);
 
-      // Actualizar el estado del producto a 'sold: true'
       await axios.patch(
         `${API}/api/products/mark-product-as-sold/${product._id}`
       );
       console.log("Producto marcado como vendido");
 
-      // Mostrar mensaje de confirmación
       setShowConfirmation(true);
     } catch (error) {
       setError("Hubo un error al procesar la compra. Intenta nuevamente.");
@@ -111,7 +106,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
             Producto Adquirido
           </h2>
 
-          {/* Si la transacción fue confirmada, mostrar el mensaje de éxito */}
           {showConfirmation ? (
             <div className="text-center">
               <p className="text-xl font-semibold text-green-600">
@@ -123,7 +117,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
             </div>
           ) : (
             <div className="flex flex-col md:flex-row gap-6">
-              {/* Sección de Detalles del Producto y Dirección */}
               <div className="flex-1 border-secondary/20 md:border-r md:pr-4 space-y-6">
                 <h3 className="text-lg font-semibold text-secondary">
                   Detalles del Producto
@@ -137,7 +130,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
                   </div>
                 </div>
 
-                {/* Sección de Dirección */}
                 <h3 className="text-lg font-semibold text-secondary">
                   Dirección de Envío
                 </h3>
@@ -153,7 +145,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
                   </p>
                 </div>
 
-                {/* Formulario de Dirección */}
                 <div className="space-y-4 mt-4">
                   <div className="space-y-2">
                     <label
@@ -208,7 +199,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
                   Método de Pago
                 </h3>
 
-                {/* Vista previa de la tarjeta */}
                 {card ? (
                   <div className="space-y-4">
                     <div className="w-64 h-40 bg-gradient-to-r from-primary to-secondary text-primary-content rounded-lg p-4 flex flex-col justify-between shadow-lg">
@@ -237,7 +227,6 @@ const PurchaseConfirmationModal = ({ product, onClose }) => {
             </div>
           )}
 
-          {/* Pie del modal */}
           {!showConfirmation && (
             <div className="modal-action mt-6">
               <button onClick={onClose} className="btn btn-ghost">

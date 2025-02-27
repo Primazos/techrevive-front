@@ -38,7 +38,6 @@ const UserDetails = () => {
     }
   }, [id]);
 
-  // Aquí realizamos el cálculo para la paginación
   const totalPages = Math.ceil(products.length / productsPerPage);
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -109,7 +108,6 @@ const UserDetails = () => {
         </div>
       </div>
 
-      {/* Panel Derecho - Productos con Paginación */}
       <div className="w-2/3 p-4 rounded-lg ml-4 flex flex-col h-full">
         <h2 className="font-bold p-4 text-2xl justify-center flex">
           Tus Productos

@@ -4,7 +4,7 @@ import API from "../../../db/conn";
 
 const CreditCard = ({ creditCard, onDelete, onSelectDefault }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDefault, setIsDefault] = useState(creditCard.is_default); // Establecemos el estado inicial
+  const [isDefault, setIsDefault] = useState(creditCard.is_default);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -19,8 +19,8 @@ const CreditCard = ({ creditCard, onDelete, onSelectDefault }) => {
       await axios.put(
         `${API}/api/credit-cards/select-default-credit-card/${creditCard._id}`
       );
-      onSelectDefault(creditCard._id); // Actualizar el estado en DataDetails
-      setIsDefault(true); // Cambiar el estado local
+      onSelectDefault(creditCard._id);
+      setIsDefault(true);
     } catch (error) {
       console.error("Error al seleccionar tarjeta predeterminada", error);
     }
@@ -32,8 +32,8 @@ const CreditCard = ({ creditCard, onDelete, onSelectDefault }) => {
         `${API}/api/credit-cards/delete-credit-card/${creditCard._id}`
       );
       console.log("Tarjeta eliminada:", response.data);
-      onDelete(creditCard._id); // Llamar a la función onDelete
-      handleCloseModal(); // Cerrar el modal
+      onDelete(creditCard._id);
+      handleCloseModal();
     } catch (error) {
       console.error(error);
       alert("Hubo un problema al eliminar la tarjeta.");

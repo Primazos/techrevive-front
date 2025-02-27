@@ -13,7 +13,7 @@ const TransactionDetailsModal = ({ transaction, onClose }) => {
       try {
         const [buyerRes, sellerRes] = await Promise.all([
           axios.get(`${API}/api/users/get-user/${transaction.buyer_id}`),
-          axios.get(`${API}/api/users/get-user/${transaction.seller_id}`)
+          axios.get(`${API}/api/users/get-user/${transaction.seller_id}`),
         ]);
         setBuyerUser(buyerRes.data);
         setSellerUser(sellerRes.data);
@@ -34,7 +34,6 @@ const TransactionDetailsModal = ({ transaction, onClose }) => {
         className="bg-base-200 rounded-lg shadow-xl max-w-4xl w-full p-6 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Botón para cerrar el modal */}
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl"
           onClick={onClose}
@@ -42,7 +41,6 @@ const TransactionDetailsModal = ({ transaction, onClose }) => {
           &times;
         </button>
         <div className="flex flex-col md:flex-row">
-          {/* Imagen del producto */}
           <div className="md:w-1/3">
             <img
               src={transaction.image_url}
@@ -50,23 +48,29 @@ const TransactionDetailsModal = ({ transaction, onClose }) => {
               className="w-full h-full object-cover rounded-lg"
             />
           </div>
-          {/* Datos del producto y usuarios */}
+
           <div className="md:w-2/3 md:pl-6 mt-4 md:mt-0">
-            <h2 className="text-2xl font-bold mb-4">{transaction.product_name}</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              {transaction.product_name}
+            </h2>
             <p className="mb-2">
-              <span className="font-semibold">Categoría:</span> {transaction.category}
+              <span className="font-semibold">Categoría:</span>{" "}
+              {transaction.category}
             </p>
             <p className="mb-2">
-              <span className="font-semibold">Precio:</span> {transaction.sale_price} €
+              <span className="font-semibold">Precio:</span>{" "}
+              {transaction.sale_price} €
             </p>
             {sellerUser && (
               <p className="mb-2">
-                <span className="font-semibold">Vendedor:</span> {sellerUser.username}
+                <span className="font-semibold">Vendedor:</span>{" "}
+                {sellerUser.username}
               </p>
             )}
             {buyerUser && (
               <p className="mb-2">
-                <span className="font-semibold">Comprador:</span> {buyerUser.username}
+                <span className="font-semibold">Comprador:</span>{" "}
+                {buyerUser.username}
               </p>
             )}
             {transaction.address && (

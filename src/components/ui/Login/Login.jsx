@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
-import { i } from "framer-motion/client";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -21,8 +20,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setIsLoggingIn(true); // Activar el estado de "Cargando"
-    setMessage({ text: "", type: "" }); // Resetear el mensaje antes de intentar login
+    setIsLoggingIn(true);
+    setMessage({ text: "", type: "" }); 
 
     try {
       await login(formData);
@@ -31,37 +30,26 @@ const Login = () => {
         type: "success",
       });
 
-      // Redirigir al Home después de 3 segundos (tiempo que el mensaje estará visible)
+      
       setTimeout(() => {
-        navigate("/"); // Redirige al Home (o al Dashboard)
+        navigate("/");
       }, 1500);
 
-      // Ocultar el mensaje después de 3 segundos
+
       setTimeout(() => setMessage({ text: "", type: "" }), 3000);
     } catch (error) {
-      console.log("Error al intentar login:", error); // Aquí se captura el error lanzado en el store
+      console.log("Error al intentar login:", error);
       setMessage({
         text:
           error.response?.data?.message ||
           "Error al iniciar sesión. Verifica tus credenciales.",
         type: "error",
       });
-      setTimeout(() => setMessage({ text: "", type: "" }), 3000); // Ocultar después de 3 segundos
+      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
     } finally {
-      setIsLoggingIn(false); // Desactivar el estado de "Cargando"
+      setIsLoggingIn(false);
     }
   };
-
-  /*   useEffect(() => {
-    if (isAuthenticated) {
-      console.log("Usuario autenticado con ID:", userId);
-      navigate("/");
-      // Puedes redirigir al dashboard o a otra página aquí si lo necesitas
-    }
-    if (!isAuthenticated && userId) {
-      console.log("No se pudo autenticar al usuario.");
-    }
-  }, [isAuthenticated, userId]); // Este efecto se ejecuta cuando isAuthenticated o userId cambian */
 
   return (
     <div className="hero bg-base-200 h-full">

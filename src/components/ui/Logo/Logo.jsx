@@ -10,7 +10,6 @@ const Logo = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="container mx-auto px-2 flex gap-20 flex-col lg:flex-row items-center justify-center">
-        {/* Logo a la izquierda */}
         <motion.img
           src={logo}
           className="w-60 h-auto rounded-lg"
@@ -20,7 +19,6 @@ const Logo = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
         />
 
-        {/* Contenedor del texto animado desde la derecha */}
         <motion.div
           className="text-center lg:text-center max-w-2xl"
           initial={{ opacity: 0, x: 100 }}

@@ -48,10 +48,9 @@ const SignIn = () => {
         type: "success",
       });
 
-      // Limpiar el mensaje de éxito después de 2 segundos
       setTimeout(() => {
         setMessage({ text: "", type: "" });
-        setSuccess(true); // Redirigir después de 2s
+        setSuccess(true);
       }, 2000);
     } catch (error) {
       setMessage({
@@ -59,10 +58,9 @@ const SignIn = () => {
         type: "error",
       });
 
-      // Limpiar el mensaje de error después de 3 segundos
       setTimeout(() => {
         setMessage({ text: "", type: "" });
-      }, 3000); // 3 segundos para el mensaje de error
+      }, 3000);
     }
   };
 

@@ -20,7 +20,6 @@ const DataDetails = ({ data }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para controlar la visibilidad de los modales
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
   const [isShowTransactionsModalOpen, setIsShowTransactionsModalOpen] =
@@ -233,7 +232,9 @@ const DataDetails = ({ data }) => {
           <div className="flex flex-row flex-wrap p-6 gap-16 justify-center">
             {transactions.length > 0 ? (
               transactions.map((transaction, index) => {
-                return <TransactionCard transaction={transaction} key={index} />;
+                return (
+                  <TransactionCard transaction={transaction} key={index} />
+                );
               })
             ) : (
               <div className="flex flex-col gap-4 text-center">
@@ -267,7 +268,7 @@ const DataDetails = ({ data }) => {
                   <CreditCard
                     creditCard={creditCard}
                     onDelete={handleDeleteCreditCard}
-                    onSelectDefault={handleSelectDefault} // Llamamos a la función para actualizar el estado
+                    onSelectDefault={handleSelectDefault}
                     key={index}
                   />
                 );
@@ -284,7 +285,6 @@ const DataDetails = ({ data }) => {
         </div>
       ) : null}
 
-      {/* Renderizar el modal de productos */}
       <AddProduct
         isOpen={isAddProductModalOpen}
         onClose={() => setIsAddProductModalOpen(false)}

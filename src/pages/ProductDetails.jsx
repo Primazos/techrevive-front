@@ -31,42 +31,19 @@ const ProductDetails = () => {
     }
   };
 
-  /* useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.get(
-          `${API}/api/products/get-product/${id}` // Usa id directamente
-        );
-        setProduct(response.data);
-        console.log("Producto obtenido:", response.data.sold);
-      } catch (error) {
-        console.error("Error al obtener el producto:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    console.log("ID del producto recibido:", id);
-    if (id) {
-      fetchProduct();
-    }
-  }, [id]); */
-
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `${API}/api/products/get-product/${id}` // Usa id directamente
+          `${API}/api/products/get-product/${id}`
         );
         setProduct(response.data);
         console.log("Producto obtenido:", response.data.sold);
 
-        // Verificar si ya existe un chat con el vendedor
         const chatResponse = await axios.get(
           `${API}/api/chats/get-chats-by-product/${id}`
         );
 
-        // Verificar si alguno de los chats existentes tiene el mismo seller_id y buyer_id
         const chatExists = chatResponse.data.some(
           (chat) =>
             (chat.seller_id === response.data.user_id &&
@@ -75,7 +52,7 @@ const ProductDetails = () => {
               chat.buyer_id === response.data.user_id)
         );
 
-        setChatExists(chatExists); // Actualizar estado con la existencia del chat
+        setChatExists(chatExists);
       } catch (error) {
         console.error("Error al obtener el producto:", error);
       } finally {
@@ -145,22 +122,25 @@ const ProductDetails = () => {
           <strong>Precio:</strong> {product.price} €
         </p>
 
-        {/* Verifica si el producto está vendido */}
         {product.sold && isAuthenticated ? (
           <p className="text-red-500 font-semibold">
             Este producto ya está vendido
           </p>
         ) : (
-          // Solo muestra botones si el usuario está autenticado
           isAuthenticated &&
           userId !== product.user_id && (
             <div className="flex flex-row gap-4 justify-start">
-              <button className="btn btn-primary" onClick={()=>setModalOpen(true)}>Comprar</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => setModalOpen(true)}
+              >
+                Comprar
+              </button>
               <div>
                 <button
                   className="btn btn-secondary"
                   onClick={createChatHandler}
-                  disabled={chatExists} // Deshabilita el botón si el chat ya existe
+                  disabled={chatExists}
                 >
                   {chatExists
                     ? "Ya tienes un chat con el vendedor"

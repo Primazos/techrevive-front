@@ -15,10 +15,10 @@ const Profile = () => {
   useEffect(() => {
     if (message.text) {
       const timer = setTimeout(() => {
-        setMessage({ type: "", text: "" }); // Esto reseteará solo el mensaje
+        setMessage({ type: "", text: "" });
       }, 2000);
   
-      // Limpiar el timer en caso de que el mensaje cambie antes de los 2 segundos
+     
       return () => clearTimeout(timer);
     }
   }, [message]); 
@@ -33,7 +33,7 @@ const Profile = () => {
 
     const formData = new FormData();
     formData.append("avatar", avatarFile);
-    formData.append("user_id", user._id); // Asegúrate de pasar el ID del usuario
+    formData.append("user_id", user._id); 
 
     setLoading(true);
 
@@ -51,7 +51,7 @@ const Profile = () => {
         type: "success",
         text: "Avatar actualizado correctamente.",
       });
-      // 🔹 Actualiza el avatar en el estado global (Zustand)
+      
       updateUser({ ...user, avatar_img: response.data.avatar_img });
     } catch (error) {
       setMessage({ type: "error", text: "Error al subir avatar." });
@@ -81,10 +81,10 @@ const Profile = () => {
         <div className="avatar">
           <div
             className="ring-neutral ring-offset-base-100 w-44 rounded-full ring ring-offset-2 cursor-pointer"
-            onClick={() => document.getElementById("fileInput").click()} // Simula el clic en el input de archivo
+            onClick={() => document.getElementById("fileInput").click()} 
           >
             <div>
-              {loading ? ( // 🔹 Muestra el loader si `loading` es `true`
+              {loading ? ( 
                 <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
               ) : user.avatar_img ? (
                 <img
@@ -99,9 +99,9 @@ const Profile = () => {
             <input
               type="file"
               accept="image/*"
-              id="fileInput" // Asigna un id al input
-              className="absolute opacity-0" // Oculta el input
-              onChange={handleFileChange} // Llama a la función que maneja la selección de archivos
+              id="fileInput" 
+              className="absolute opacity-0" 
+              onChange={handleFileChange}
             />
           </div>
         </div>
